@@ -9,15 +9,15 @@ const NotesSchema = new Schema({
     description: {
         type: String,
         required: true,
-        unique : true
+        unique: true
     },
     tag: {
         type: String,
-        default : "General"
+        default: "General"
     },
     timeStamp: {
         type: date,
         default: date.now
     }
 });
-module.exports = mongoose.model('notes',NotesSchema);
+module.exports = mongoose.model('notes', NotesSchema);
