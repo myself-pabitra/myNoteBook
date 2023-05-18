@@ -5,9 +5,24 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: gray;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+i{
+  cursor: pointer;
+}
+.form-control{
+  background-color: #d1c7c7;
+}
+.card-body{
+  background-color: #d1c7c7;
+}
+.tag {
+  display: flex;
+  justify-content: flex-start;
+  align-items: baseline;
 }

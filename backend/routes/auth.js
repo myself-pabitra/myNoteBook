@@ -16,18 +16,18 @@ router.post('/createuser', [
     body('username', 'Enter a valid username').isLength({ min: 4 }),
 
 ], async (req, res) => {
-
+    let success = false;
     // If there is any error return Bad Request and the error 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
+        return res.status(400).json({success, errors: errors.array() });
     }
     // Check wheather the user with this email or username exists already or not
 
     try {
         let user = await User.findOne({ email: req.body.email });
         if (user) {
-            return res.status(400).json({ error: "Sorry a user is already exists with this Email" })
+            return res.status(400).json({success, error: "Sorry a user is already exists with this Email" })
         }
         const salt = await bcrypt.genSalt(10)
         const secPass = await bcrypt.hash(req.body.password, salt)
@@ -45,7 +45,8 @@ router.post('/createuser', [
         }
         const authToken = jwt.sign(data, JWT_SECREAT);
         // res.json(user)
-        res.json({ authToken })
+        success = true;
+        res.json({ success, authToken })
     } catch (error) {
         console.error(error.message);
         res.status(500).send("Internal Server Error");
@@ -61,6 +62,7 @@ router.post('/login', [
 ], async (req, res) => {
     // If there is any error return Bad Request and the error 
     const errors = validationResult(req);
+    let success = false;
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
@@ -69,11 +71,13 @@ router.post('/login', [
     try {
         let user = await User.findOne({ email });
         if (!user) {
-            return res.status(400).json({ error: "Please try to login with correct Credencials " });
+            success = false;
+            return res.status(400).json({success, error: "Please try to login with correct Credencials " });
         }
         const passwordCompare = await bcrypt.compare(password, user.password);
         if (!passwordCompare) {
-            return res.status(400).json({ error: "Please try to login with correct Credencials " });
+            success = false
+            return res.status(400).json({success, error: "Please try to login with correct Credencials " });
 
         }
 
@@ -83,7 +87,8 @@ router.post('/login', [
             }
         }
         const authToken = jwt.sign(data, JWT_SECREAT);
-        res.json({ authToken })
+        success = true;
+        res.json({ success,authToken })
     } catch (error) {
         console.error(error.message);
         res.status(500).send("Internal Server Error");
